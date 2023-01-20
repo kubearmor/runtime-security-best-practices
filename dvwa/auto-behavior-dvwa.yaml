@@ -1,0 +1,88 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: autopol-system-1677098965
+  namespace: dvwa
+spec:
+  action: Allow
+  file:
+    matchDirectories:
+    - dir: /
+      fromSource:
+      - path: /usr/bin/awk
+      - path: /usr/sbin/mysqld
+      recursive: true
+    - dir: /proc/
+      fromSource:
+      - path: /usr/bin/id
+      recursive: true
+    - dir: /lib/x86_64-linux-gnu/
+      recursive: true
+    matchPaths:
+    - path: /dev/null
+    - fromSource:
+      - path: /usr/bin/id
+      path: /etc/ld.so.cache
+  process:
+    matchPaths:
+    - fromSource:
+      - path: /bin/bash
+      path: /usr/bin/awk
+    - fromSource:
+      - path: /bin/bash
+      path: /usr/bin/id
+    - fromSource:
+      - path: /bin/bash
+      path: /usr/sbin/mysqld
+    - path: /bin/bash
+  selector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  severity: 1
+---
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: autopol-system-3788369272
+  namespace: dvwa
+spec:
+  action: Allow
+  file:
+    matchDirectories:
+    - dir: /etc/mysql/conf.d/
+      fromSource:
+      - path: /usr/sbin/mysqld
+      recursive: true
+    - dir: /lib/x86_64-linux-gnu/
+      recursive: true
+    matchPaths:
+    - fromSource:
+      - path: /usr/sbin/mysqld
+      path: /etc/localtime
+    - fromSource:
+      - path: /usr/sbin/mysqld
+      path: /etc/mysql/my.cnf
+    - fromSource:
+      - path: /usr/sbin/mysqld
+      path: /usr/share/mysql/charsets/Index.xml
+    - fromSource:
+      - path: /usr/sbin/mysqld
+      path: /usr/share/mysql/english/errmsg.sys
+    - fromSource:
+      - path: /usr/sbin/mysqld
+      path: /var/lib/mysql/dvwa-mysql-78559f4fd4-swz2k.lower-test
+  process:
+    matchPaths:
+    - fromSource:
+      - path: /bin/bash
+      path: /usr/bin/awk
+    - fromSource:
+      - path: /bin/bash
+      path: /usr/sbin/mysqld
+  selector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  severity: 1
+---

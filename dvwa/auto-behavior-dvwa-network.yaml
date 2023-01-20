@@ -1,0 +1,74 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app: dvwa-mysql
+    tier: backend
+  name: autopol-egress-mxvsoggivfjpmqp
+  namespace: dvwa
+spec:
+  egress:
+  - ports:
+    - protocol: UDP
+  - ports:
+    - port: 3306
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: dvwa-web
+          tier: frontend
+  podSelector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app: dvwa-web
+    tier: frontend
+  name: autopol-ingress-epfmcgvzqafjpkb
+  namespace: dvwa
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: dvwa-mysql
+          tier: backend
+    ports:
+    - port: 3306
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: dvwa-web
+      tier: frontend
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app: dvwa-web
+    tier: frontend
+  name: autopol-egress-xheanvmvxskkntc
+  namespace: dvwa
+spec:
+  egress:
+  - ports:
+    - protocol: UDP
+  - ports:
+    - port: 3306
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: dvwa-web
+      tier: frontend
+  policyTypes:
+  - Egress
+---
