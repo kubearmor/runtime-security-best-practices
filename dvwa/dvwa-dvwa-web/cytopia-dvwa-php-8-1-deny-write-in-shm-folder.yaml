@@ -1,0 +1,21 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: dvwa-web-cytopia-dvwa-php-8-1-deny-write-in-shm-folder
+  namespace: dvwa
+spec:
+  action: Block
+  file:
+    matchDirectories:
+    - dir: /dev/shm/
+      readOnly: true
+      recursive: true
+  message: Alert! write to /dev/shm folder prevented.
+  selector:
+    matchLabels:
+      app: dvwa-web
+      tier: frontend
+  severity: 5
+  tags:
+  - MITRE_execution
+  - MITRE

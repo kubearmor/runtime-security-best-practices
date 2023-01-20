@@ -1,0 +1,20 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: dvwa-mysql-mariadb-10-1-audit-access-to-mysqldump
+  namespace: dvwa
+spec:
+  action: Audit
+  message: Alert! mysqldump command execution detected.
+  process:
+    matchPaths:
+    - path: /usr/bin/mysqldump
+  selector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  severity: 10
+  tags:
+  - MySQL
+  - mysqldump
+  - process

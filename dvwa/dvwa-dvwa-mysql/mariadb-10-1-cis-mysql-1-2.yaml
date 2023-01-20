@@ -1,0 +1,20 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: dvwa-mysql-mariadb-10-1-cis-mysql-1-2
+  namespace: dvwa
+spec:
+  action: Block
+  message: Notification! useradd and groupadd command executions denied!
+  process:
+    matchPaths:
+    - path: /usr/sbin/groupadd
+    - path: /usr/sbin/useradd
+  selector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  severity: 1
+  tags:
+  - MySQL
+  - CIS

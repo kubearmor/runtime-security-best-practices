@@ -1,0 +1,20 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: dvwa-mysql-mariadb-10-1-maintenance-tool-access
+  namespace: dvwa
+spec:
+  action: Block
+  message: restricted maintenance tool access attempt detected
+  process:
+    matchDirectories:
+    - dir: /sbin/
+      recursive: true
+  selector:
+    matchLabels:
+      app: dvwa-mysql
+      tier: backend
+  severity: 1
+  tags:
+  - PCI_DSS
+  - MITRE
